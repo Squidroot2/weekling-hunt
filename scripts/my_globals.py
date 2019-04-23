@@ -50,5 +50,4 @@ def initializeGlobals():
     STAT_FONT = pygame.font.Font('freesansbold.ttf', STAT_FONT_SIZE)
     S_BUTTON_FONT = pygame.font.Font('freesansbold.ttf', S_BUTTON_FONT_SIZE)
     MESSAGE_FONT = pygame.font.Font('freesansbold.ttf', MESSAGE_FONT_SIZE)
-    MESSAGE_FONT.set_italic(True)
-
+    
