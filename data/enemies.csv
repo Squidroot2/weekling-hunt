@@ -1,0 +1,12 @@
+name,health,strength,agility,accuracy,gold,rare,morn_occ,mid_occ,eve_occ,night_occ,image
+Quokka,1,1,2,1,1,0,40,20,0,0,quokka.png	
+Frill Lizard,2,2,2,2,2,0,35,45,0,0,lizard.png
+Python,3,2,2,3,3,0,20,30,0,0,python.png
+Kangaroo,5,3,2,4,10,1,5,0,0,0,kangaroo.png
+Eagle,5,2,5,5,10,1,0,5,0,0,eagle.png
+Tasmanian Devil,3,3,4,2,4,0,0,0,40,0,devil.png
+Flying Fox,3,2,5,4,5,0,0,0,30,0,bat.png
+Dingo,4,3,4,3,6,0,0,0,20,20,dingo.png
+Death Adder,6,4,5,5,8,0,0,0,10,35,adder.png
+Cassowary,8,5,4,3,12,0,0,0,0,35,cassowary.png
+Crocodile,10,5,4,5,20,1,0,0,0,10,crocodile.png

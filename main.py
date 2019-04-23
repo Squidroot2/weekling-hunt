@@ -1,128 +1,68 @@
 # Weekling Hunt: Pygame Edition
 # By Hayden Foley
-# I orginally created this game to help myself learn python and programming in general.
+# I originally created this game to help myself learn python and programming in general.
 # After discovering pygame, I wanted to recreate this game with 2D graphics
 
-import random, sys, pygame
-import chargen
+import sys
 from pygame.locals import *   # Import Constants
 
-
-FPS = 60
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
-
-# Colors         R    G    B
-WHITE        = (255, 255, 255)
-BLACK        = (  0,   0,   0)
-SKY_BLUE     = (  0, 213, 255)
-
-
-#Font sizes
-TITLE_FONT_SIZE = 48
-MAIN_FONT_SIZE = 30
-STAT_FONT_SIZE = 24
-
-# SYNTACTIC SUGAR for PANES # Returns the rect dimensions left, center, right, and bottom pane
-LEFT = 0
-CENTER = 1
-RIGHT = 2
-BOTTOM = 3
-
-
-# Gamestates
-START = 0
-MAIN = 1
-BATTLE = 2
-TRAIN = 3
-SLEEP = 4
-END = 5
+from scripts.draw_wh import *
+from scripts.timekeeper import GameTime
+from scripts import chargen
+from scripts.buttons import *
 
 
 def main():
-    global FPS_CLOCK, MAIN_FONT, TITLE_FONT, STAT_FONT, screen
 
-    pygame.init()
-    FPS_CLOCK = pygame.time.Clock()
-    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    pygame.display.set_caption('Weekling Hunt')
+    g.initializeGlobals()
 
-    TITLE_FONT = pygame.font.Font('freesansbold.ttf', TITLE_FONT_SIZE)
-    MAIN_FONT = pygame.font.Font('freesansbold.ttf', MAIN_FONT_SIZE)
-    STAT_FONT = pygame.font.Font('freesansbold.ttf', STAT_FONT_SIZE)
-
-
-
-    game_state = START
+    game_state = g.START
     game_state = titleScreen(game_state)
-
     game_time = GameTime()
+
     player = generatePlayer() # Generates the global variable player
+    panes = getPaneDimensions()
     while True:  # main game loop
         checkForQuit()
-        if game_state == MAIN:
-            game_state = mainGameScreen(player, game_state, game_time)
-        elif game_state == BATTLE:
-            game_state = battleScreen()
-        elif game_state == TRAIN:
+        if game_time.timeOver():
+            game_state = g.END
+
+        if game_state == g.MAIN:
+            game_state = mainGameMenu(player, game_state, game_time, panes)
+        elif game_state == g.BATTLE:
+            game_state = battleScreen(player, game_state, game_time, panes)
+        elif game_state == g.TRAIN:
             game_state = trainScreen()
-        elif game_state == END:
+        elif game_state == g.END:
             break
 
     showScore()
 
-
-class GameTime:
-    day = 0
-    time = 0
-    days_of_week = ('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')
-    times_of_day = ('Morning', 'Afternoon', 'Evening', 'Night')
-    max_day = len(days_of_week)
-
-    def incrementTime(self):
-        self.time += 1
-        if self.time == len(self.times_of_day):
-            self.incrementDay()
-
-    def incrementDay(self):
-        self.day += 1  # increases the day of the week
-        self.time = 0  # sets time to morning
-        
-    def timeOver(self):
-        if self.day == self.max_day:
-            print("The week is over. Game Ended")
-            print()
-            return True
-        else:
-            return False
-
-
 def titleScreen(game_state):
-    screen.fill(SKY_BLUE)
+    g.screen.fill(g.SKY_BLUE)
 
-    title = TITLE_FONT.render("Weekling Adventure", True, BLACK)
+    title = g.TITLE_FONT.render("Weekling Hunt", True, g.BLACK)
     title_rect = title.get_rect()
-    title_rect.center = (WINDOW_WIDTH /2, WINDOW_HEIGHT / 6)
+    title_rect.center = (g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT / 6)
 
-    subtitle1 = MAIN_FONT.render("A Game By Hayden Foley", True, BLACK)
+    subtitle1 = g.MAIN_FONT.render("A Game By Hayden Foley", True, g.BLACK)
     subtitle1_rect = subtitle1.get_rect()
-    subtitle1_rect.midtop = (WINDOW_WIDTH/2, title_rect.bottom+MAIN_FONT_SIZE)
+    subtitle1_rect.midtop = (g.WINDOW_WIDTH / 2, title_rect.bottom + g.MAIN_FONT_SIZE)
 
-    subtitle2 = MAIN_FONT.render("With Art By Nina Langlois", True, BLACK)
+    subtitle2 = g.MAIN_FONT.render("With Art By Nina Langlois", True, g.BLACK)
     subtitle2_rect = subtitle2.get_rect()
-    subtitle2_rect.midtop = (WINDOW_WIDTH/2, subtitle1_rect.bottom)
+    subtitle2_rect.midtop = (g.WINDOW_WIDTH / 2, subtitle1_rect.bottom)
 
-    continue_prompt = MAIN_FONT.render("Press Enter to Continue", True, BLACK)
+    continue_prompt = g.MAIN_FONT.render("Press Enter to Continue", True, g.BLACK)
     continue_prompt_rect = continue_prompt.get_rect()
-    continue_prompt_rect.center = (WINDOW_WIDTH/2, WINDOW_HEIGHT * 2/3)
+    continue_prompt_rect.center = (g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT * 2 / 3)
 
+    g.screen.blit(title, title_rect)
+    g.screen.blit(subtitle1, subtitle1_rect)
+    g.screen.blit(subtitle2, subtitle2_rect)
+    g.screen.blit(continue_prompt, continue_prompt_rect)
 
-    screen.blit(title, title_rect)
-    screen.blit(subtitle1, subtitle1_rect)
-    screen.blit(subtitle2, subtitle2_rect)
-    screen.blit(continue_prompt, continue_prompt_rect)
-
-    while game_state == START:
+    while game_state == g.START:
         checkForQuit()
         for event in pygame.event.get(KEYUP):
             if event.key == K_RETURN:
@@ -130,7 +70,7 @@ def titleScreen(game_state):
                 return game_state
 
         pygame.display.update()
-        FPS_CLOCK.tick(FPS)
+        g.FPS_CLOCK.tick(g.FPS)
 
 
 def terminate():
@@ -154,19 +94,19 @@ def generatePlayer():
 
 
 def getPlayerName():
-    prompt = MAIN_FONT.render("What is your name?", True, BLACK)
+    prompt = g.MAIN_FONT.render("What is your name?", True, g.BLACK)
     prompt_rect = prompt.get_rect()
-    prompt_rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - (MAIN_FONT_SIZE*2))
+    prompt_rect.center = (g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT / 2 - (g.MAIN_FONT_SIZE * 2))
 
-    continue_prompt = MAIN_FONT.render("Press Enter to Continue", True, BLACK)
+    continue_prompt = g.MAIN_FONT.render("Press Enter to Continue", True, g.BLACK)
     continue_prompt_rect = continue_prompt.get_rect()
-    continue_prompt_rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT *2/3)
+    continue_prompt_rect.center = (g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT * 2 / 3)
 
     name = ''
-    pygame.event.clear()  # Needed to make sure that any keys hit in the title screen don't end up in the name
+    pygame.event.clear()  # Needed to make sure that any keys hit in the title g.screen don't end up in the name
     while True:
-        screen.fill(SKY_BLUE)
-        screen.blit(prompt, prompt_rect)
+        g.screen.fill(g.SKY_BLUE)
+        g.screen.blit(prompt, prompt_rect)
 
         checkForQuit()
         for event in pygame.event.get():
@@ -178,182 +118,204 @@ def getPlayerName():
                 else:
                     name += event.unicode
 
-        input = MAIN_FONT.render(name, True, BLACK)
+        input = g.MAIN_FONT.render(name, True, g.BLACK)
         input_rect = input.get_rect()
-        input_rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        input_rect.center = (g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT / 2)
 
         if len(name) > 0:
-            screen.blit(input, input_rect)
-            screen.blit(continue_prompt, continue_prompt_rect)
+            g.screen.blit(input, input_rect)
+            g.screen.blit(continue_prompt, continue_prompt_rect)
 
-        FPS_CLOCK.tick(FPS)
+        g.FPS_CLOCK.tick(g.FPS)
         pygame.display.update()
 
 
 def getPaneDimensions():
     # Returns the rect dimensions left, center, right, and bottom pane
-    BOTTOM_PANE_HEIGHT = WINDOW_HEIGHT/4
-    SIDE_PANE_WIDTH = WINDOW_WIDTH/4
+    bottom_pane_height = g.WINDOW_HEIGHT / 4
+    side_pane_width = g.WINDOW_WIDTH / 4
 
-    bottom_pane = pygame.Rect(0, BOTTOM_PANE_HEIGHT*3, WINDOW_WIDTH, BOTTOM_PANE_HEIGHT)
+    bottom_pane = pygame.Rect(0, bottom_pane_height * 3, g.WINDOW_WIDTH, bottom_pane_height)
 
     # The left and right panes are slightly offset to compensate for the thickness of the border
-    left_pane = pygame.Rect(0,0,SIDE_PANE_WIDTH,BOTTOM_PANE_HEIGHT*3)
-    right_pane = pygame.Rect(WINDOW_WIDTH-SIDE_PANE_WIDTH, 0,SIDE_PANE_WIDTH,BOTTOM_PANE_HEIGHT*3)
+    left_pane = pygame.Rect(0,0,side_pane_width,bottom_pane_height*3)
+    right_pane = pygame.Rect(g.WINDOW_WIDTH - side_pane_width, 0, side_pane_width, bottom_pane_height * 3)
 
-    center_pane = pygame.Rect(SIDE_PANE_WIDTH,0,WINDOW_WIDTH/2,WINDOW_HEIGHT*3/4)
+    center_pane = pygame.Rect(side_pane_width, 0, g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT * 3 / 4)
 
     return left_pane, center_pane, right_pane, bottom_pane
 
 
-def createMainTemplate(panes): #todo finish making template
-    # Creates the template that it used for all game screens. Does not update the screen
-    screen.fill(WHITE)
-    
-
-    #Bottom Pane
-    pygame.draw.rect(screen, BLACK, (panes[BOTTOM]), 0)
-    pygame.draw.rect(screen, BLACK, (panes[LEFT]), 2)
-    pygame.draw.rect(screen, BLACK, (panes[RIGHT]), 2)
-    pygame.draw.rect(screen, BLACK, (panes[CENTER]), 2)
-
-
-def drawStatValues(player, pane):
-    #fills the left or right with player or enemy stats
-    X_MARGIN = 30
-    Y_MARGIN = 50
-    
-    name_text = MAIN_FONT.render(player.name, True, BLACK)
-    name_text_rect = name_text.get_rect()
-    name_text_rect.midleft = (pane.left+X_MARGIN, Y_MARGIN)
-
-    health_text = STAT_FONT.render("Health:", True, BLACK)
-    health_text_rect = health_text.get_rect()
-    health_text_rect.midleft = (pane.left+X_MARGIN, name_text_rect.bottom + MAIN_FONT_SIZE*2)
-
-    health_value = STAT_FONT.render(("%d/%d" %(player.current_health,player.max_health)), True, BLACK)
-    health_value_rect = health_value.get_rect()
-    health_value_rect.midright = (pane.right-X_MARGIN, health_text_rect.centery)
-
-    strength_text = STAT_FONT.render("Strength:", True, BLACK)
-    strength_text_rect = strength_text.get_rect()
-    strength_text_rect.midleft = (pane.left+X_MARGIN, health_text_rect.bottom + STAT_FONT_SIZE*1.5)
-
-    strength_value = STAT_FONT.render(str(player.strength), True, BLACK)
-    strength_value_rect = strength_value.get_rect()
-    strength_value_rect.midright = (pane.right-X_MARGIN, strength_text_rect.centery)
-
-    agility_text = STAT_FONT.render("Agility:", True, BLACK)
-    agility_text_rect = agility_text.get_rect()
-    agility_text_rect.midleft = (pane.left+X_MARGIN, strength_text_rect.bottom + STAT_FONT_SIZE*1.5)
-
-    agility_value = STAT_FONT.render(str(player.agility), True, BLACK)
-    agility_value_rect = agility_value.get_rect()
-    agility_value_rect.midright = (pane.right-X_MARGIN, agility_text_rect.centery)
-
-    accuracy_text = STAT_FONT.render("Accuracy:", True, BLACK)
-    accuracy_text_rect = accuracy_text.get_rect()
-    accuracy_text_rect.midleft = (pane.left+X_MARGIN, agility_text_rect.bottom + STAT_FONT_SIZE*1.5)
-
-    accuracy_value = STAT_FONT.render(str(player.accuracy), True, BLACK)
-    accuracy_value_rect = accuracy_value.get_rect()
-    accuracy_value_rect.midright = (pane.right-X_MARGIN, accuracy_text_rect.centery)
-    
-    gold_text = STAT_FONT.render("Gold:", True, BLACK)
-    gold_text_rect = gold_text.get_rect()
-    gold_text_rect.midleft = (pane.left+X_MARGIN, accuracy_text_rect.bottom + STAT_FONT_SIZE*1.5)
-    
-    gold_value = STAT_FONT.render(str(player.gold), True, BLACK)
-    gold_value_rect = gold_value.get_rect()
-    gold_value_rect.midright = (pane.right-X_MARGIN, gold_text_rect.centery)
-
-    screen.blit(name_text, name_text_rect)
-    screen.blit(health_text, health_text_rect)
-    screen.blit(strength_text, strength_text_rect)
-    screen.blit(agility_text, agility_text_rect)
-    screen.blit(accuracy_text, accuracy_text_rect)
-    screen.blit(gold_text, gold_text_rect)
-    screen.blit(health_value, health_value_rect)
-    screen.blit(strength_value, strength_value_rect)
-    screen.blit(agility_value, agility_value_rect)
-    screen.blit(accuracy_value, accuracy_value_rect)
-    screen.blit(gold_value, gold_value_rect)
-
-
-def drawInfoPane(player, pane):
-    #Draws the information in the right pane while in the main game screen
-    
-    total_gold_text = STAT_FONT.render("Total Goal Earned:", True, BLACK)
-    total_gold_text_rect = total_gold_text.get_rect()
-    total_gold_text_rect.midtop = (pane.centerx, pane.top + STAT_FONT_SIZE*2)
-    
-    total_gold_value = STAT_FONT.render(str(player.total_gold), True, BLACK)
-    total_gold_value_rect = total_gold_value.get_rect()
-    total_gold_value_rect.midtop = (pane.centerx, total_gold_text_rect.bottom + STAT_FONT_SIZE)
-    
-    enemies_killed_text = STAT_FONT.render("Enemies Killed:", True, BLACK)
-    enemies_killed_text_rect = enemies_killed_text.get_rect()
-    enemies_killed_text_rect.midbottom = (pane.centerx, total_gold_value_rect.bottom + STAT_FONT_SIZE*2)
-    
-    enemies_killed_value = STAT_FONT.render(str(player.enemies_killed), True, BLACK)
-    enemies_killed_value_rect = enemies_killed_value.get_rect()
-    enemies_killed_value_rect.midtop = (pane.centerx, enemies_killed_text_rect.bottom + STAT_FONT_SIZE)
-    
-    rare_killed_text = STAT_FONT.render("Rare Enemies Killed:", True, BLACK)
-    rare_killed_text_rect = rare_killed_text.get_rect()
-    rare_killed_text_rect.midbottom = (pane.centerx, enemies_killed_value_rect.bottom + STAT_FONT_SIZE*2)
-    
-    rare_killed_value = STAT_FONT.render(str(player.rare_killed), True, BLACK)
-    rare_killed_value_rect = rare_killed_value.get_rect()
-    rare_killed_value_rect.midtop = (pane.centerx, rare_killed_text_rect.bottom + STAT_FONT_SIZE)
-        
-    screen.blit(total_gold_text, total_gold_text_rect)
-    screen.blit(total_gold_value, total_gold_value_rect)
-    screen.blit(enemies_killed_text, enemies_killed_text_rect)
-    screen.blit(enemies_killed_value, enemies_killed_value_rect)
-    screen.blit(rare_killed_text, rare_killed_text_rect)
-    screen.blit(rare_killed_value, rare_killed_value_rect)
-
-
-def drawCenterPane(game_state, game_time, pane): #todo add other center images
-
-    if game_state == MAIN:
-        if game_time.time == 0:  # time is morning
-            center_image = pygame.image.load('./images/morning_center.png').convert()
-        elif game_time == 1:  # time is afternoon
-            pass
-        elif game_time == 2:  # time is evening
-            pass
-        elif game_time == 3:  # time is night
-            pass
-
-    center_image = pygame.transform.smoothscale(center_image, (pane.width, pane.height))
-    screen.blit(center_image, pane)        
-        
-    
-def showScore(): #todo write showScore function
+def showScore():  # todo write showScore function
     pass
 
 
-def trainScreen(): #todo write trainScreen function
+def trainScreen():  # todo write trainScreen function
     pass
 
 
-def battleScreen(): #todo write battleScreen function
-    pass
+def battleScreen(player, game_state, game_time, panes):  # todo write battleScreen function
+    buttons = getButtons(game_state, panes[g.BOTTOM], panes[g.CENTER])
+    enemy = chargen.generateEnemy(game_time)
 
+    mousex, mousey = 0, 0
 
-def mainGameScreen(player, game_state, game_time): #todo write mainGameScreen function
-    panes = getPaneDimensions()
-    createMainTemplate(panes)
-    drawStatValues(player, panes[LEFT])
-    drawInfoPane(player, panes[RIGHT])
-    drawCenterPane(game_state, game_time, panes[CENTER])
-    while True:
+    drawBattleScreen(panes, player, buttons, enemy)
+    # First strike
+    if enemy.agility > player.agility:
+        message = "The %s strikes first due to its superior agility" %enemy.name
+        promptScreen(panes, message, False)
+        enemy.attack(player)
+
+        # If first strike killed the player
+        if not player.alive:
+            message = "You have been killed by the %s" % enemy.name
+            promptScreen(panes, message, False)
+            return g.END
+
+        else:
+            drawBattleScreen(panes, player, buttons, enemy)
+
+    while True: # mainGameMenu loop
+
+        mouse_clicked = False  # every loop mouse clicked is set to false until mousebuttonup event occurs
         checkForQuit()
-        FPS_CLOCK.tick(FPS)
+        for event in pygame.event.get(): # event handling loop
+            if event.type == MOUSEMOTION:
+                mousex, mousey = event.pos
+            elif event.type == MOUSEBUTTONUP:
+                mouse_clicked = True
+
+        for button in buttons:
+            over_button = button.checkHover((mousex,mousey))
+
+            if over_button and mouse_clicked:  # Button has been clicked
+                if button.text == 'Attack':
+                    player.attack(enemy)
+                    if enemy.alive:  # Enemy is still alive after player attacks
+                        enemy.attack(player)  # Enemy attacks player
+                        if not player.alive: # If player is now dead, return end game state
+                            message = "You have been killed by the %s" % enemy.name
+                            promptScreen(panes, message, False)
+                            return g.END
+                        else:
+                            drawBattleScreen(panes, player, buttons, enemy)  # After a trade of blows, redraws battle panes to keep track of health.
+                    else:  # If the enemy is dead, player collects gold adds kill to count. Then main game state is returned
+                        player.collect_gold(enemy)
+                        player.killedEnemy(enemy)
+                        drawBattleScreen(panes, player, buttons, enemy)
+                        message = "You have killed the %s and earned %d gold" % (enemy.name, enemy.gold)
+                        promptScreen(panes, message, False)
+                        game_time.incrementTime()
+                        return g.MAIN
+
+
+                elif button.text == 'Flee':
+                    message = "Are you sure you want to flee from the %s" % enemy.name
+                    confirm = promptScreen(panes, message, True)
+                    if confirm:
+                        game_time.incrementTime()
+                        return g.MAIN
+                    else:
+                        drawBattleScreen(panes, player, buttons, enemy)
+                elif button.text == 'Retire':
+                    message = "Are you sure you want to end the game?"
+                    confirm = promptScreen(panes, message, True)
+                    if confirm:
+                        return g.END
+                    else:
+                        drawBattleScreen(panes, player, buttons, enemy)
+                elif button.text == 'Help':
+                    # show help stuff
+                    pass
+
+        drawButtons(buttons)
+        g.FPS_CLOCK.tick(g.FPS)
         pygame.display.update()
 
+def mainGameMenu(player, game_state, game_time, panes):  # todo finish mainScreen function
+
+    buttons = getButtons(game_state, panes[g.BOTTOM], panes[g.CENTER])
+    drawMainScreen(panes, player, game_time, buttons) # calls a bunch of draw functions from draw_wh
+
+    mousex, mousey = 0, 0
+
+    while True: # mainGameMenu loop
+
+        mouse_clicked = False  # every loop mouse clicked is set to false until mousebuttonup event occurs
+        checkForQuit()
+        for event in pygame.event.get(): # event handling loop
+            if event.type == MOUSEMOTION:
+                mousex, mousey = event.pos
+            elif event.type == MOUSEBUTTONUP:
+                mouse_clicked = True
+
+        for button in buttons:
+            over_button = button.checkHover((mousex,mousey))
+
+            if over_button and mouse_clicked:  # Button has been clicked
+                if button.text == 'Hunt':
+                    return g.BATTLE
+                elif button.text == 'Train':
+                    return g.TRAIN
+                elif button.text == 'Sleep':
+                    message = "Sleep until tomorrow morning to heal?"
+                    confirm = promptScreen(panes, message, True)
+                    if confirm:
+                        player.sleep()
+                        game_time.incrementDay()
+                    return g.MAIN
+                elif button.text == 'Retire':
+                    # confirm retire
+                    pass
+                elif button.text == 'Help':
+                    # show help stuff
+                    pass
+
+
+
+
+        drawButtons(buttons)
+        g.FPS_CLOCK.tick(g.FPS)
+        pygame.display.update()
+
+
+def promptScreen(panes, message, askConfirm):
+    # Draws various prompts depending on the state of the game
+    # message is what will be displayed. askConfirm is whether it is a yes/no prompt or a continue prompt
+
+    drawBottomPane(panes[g.BOTTOM])
+    drawPrompt(panes[g.CENTER], message)
+    buttons = getPromptButtons(askConfirm, panes[g.BOTTOM])
+    drawButtons(buttons)
+
+
+    mousex, mousey = 0, 0
+
+    while True: # loop
+
+        mouse_clicked = False  # every loop mouse clicked is set to false until mousebuttonup event occurs
+        checkForQuit()
+        for event in pygame.event.get(): # event handling loop
+            if event.type == MOUSEMOTION:
+                mousex, mousey = event.pos
+            elif event.type == MOUSEBUTTONUP:
+                mouse_clicked = True
+
+        for button in buttons:
+            over_button = button.checkHover((mousex,mousey))
+
+            if over_button and mouse_clicked:  # Button has been clicked
+                if button.text == 'Continue':
+                    return True
+                elif button.text == 'Confirm':
+                    return True
+                elif button.text == 'Back':
+                    return False
+
+        drawButtons(buttons)
+        g.FPS_CLOCK.tick(g.FPS)
+        pygame.display.update()
 
 if __name__ == '__main__':
     main()
