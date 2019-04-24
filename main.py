@@ -60,7 +60,7 @@ def titleScreen(game_state):
 
     g.screen.blit(title, title_rect)
     g.screen.blit(subtitle1, subtitle1_rect)
-    g.screen.blit(subtitle2, subtitle2_rect)
+    #g.screen.blit(subtitle2, subtitle2_rect)
     g.screen.blit(continue_prompt, continue_prompt_rect)
 
     while game_state == g.START:
