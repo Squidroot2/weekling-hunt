@@ -3,6 +3,7 @@
 # Generates enemies by importing the csv from thew data folder
 
 import random, csv
+import scripts.my_globals as g
 
 
 class Character:
@@ -88,7 +89,35 @@ class Player(Character):
         self.enemies_killed += 1
         if opponent.rare:
             self.rare_killed += 1
-       
+    
+    def canTrain(self, skill):
+    # skill is a string that identifies the skill that will be trained. Returns true or false
+        skill_value = self.getSkillValue(skill)
+        if skill_value < 5 and self.gold >= skill_value:
+            return True
+        else:
+            return False
+    
+    def trainSkill(self, skill):
+        # Increases the skill by one and reducing gold by the skill value        
+        if skill == g.STR_STRENGTH:
+            self.gold -= self.strength
+            self.strength += 1
+        if skill == g.STR_AGILITY:
+            self.gold -= self.agility
+            self.agility += 1
+        if skill == g.STR_ACCURACY:
+            self.gold -= self.accuracy
+            self.accuracy += 1  
+    
+    def getSkillValue(self, skill):
+        if skill == g.STR_STRENGTH:
+            return self.strength
+        if skill == g.STR_AGILITY:
+            return self.agility
+        if skill == g.STR_ACCURACY:
+            return self.accuracy
+        
 
 class Enemy(Character):
     def __init__(self, data):

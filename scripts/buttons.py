@@ -50,11 +50,11 @@ def getButtons(game_state, bottom_pane, center_pane):
 
     # Draws the buttons to the screen and returns rectangle of the buttons
     if game_state == g.MAIN:
-        choices = ['Hunt', 'Train', 'Sleep']
+        choices = [g.STR_HUNT, g.STR_TRAIN, g.STR_SLEEP]
     elif game_state == g.BATTLE:
-        choices = ['Attack', 'Flee']
+        choices = [g.STR_ATTACK, g.STR_FLEE]
     elif game_state == g.TRAIN:
-        choices = ['Strength', 'Agility', 'Accuracy', 'BACK']
+        choices = [g.STR_STRENGTH, g.STR_AGILITY, g.STR_ACCURACY, g.STR_BACK]
 
     pane_divider = len(choices)+1
 
@@ -67,8 +67,8 @@ def getButtons(game_state, bottom_pane, center_pane):
 
 
     # Buttons in the center pane
-    help_button = Button('HELP', (center_pane.left+center_pane.width/3, 25), False)
-    retire_button = Button('RETIRE', (center_pane.right-center_pane.width/3, 25), False)
+    help_button = Button(g.STR_HELP, (center_pane.left+center_pane.width/3, 25), False)
+    retire_button = Button(g.STR_RETIRE, (center_pane.right-center_pane.width/3, 25), False)
     buttons.append(help_button)
     buttons.append(retire_button)
 
@@ -80,9 +80,9 @@ def getPromptButtons(askConfirm, bottom_pane):
     # isConfirm is a boolean, if true, there are two choices: confirm or back. Otherwise, the only choice is continue
 
     if askConfirm == True:
-        choices = ['Confirm', 'Back']
+        choices = [g.STR_CONFIRM, g.STR_BACK]
     else:
-        choices = ['Continue']
+        choices = [g.STR_CONTINUE]
 
     pane_divider = len(choices)+1
 

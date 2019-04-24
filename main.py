@@ -26,13 +26,14 @@ def main():
         checkForQuit()
         if game_time.timeOver():
             game_state = g.END
-
+            break
+            
         if game_state == g.MAIN:
             game_state = mainGameMenu(player, game_state, game_time, panes)
         elif game_state == g.BATTLE:
             game_state = battleScreen(player, game_state, game_time, panes)
         elif game_state == g.TRAIN:
-            game_state = trainScreen()
+            game_state = trainScreen(player, game_state, game_time, panes)
         elif game_state == g.END:
             break
 
@@ -150,9 +151,53 @@ def showScore():  # todo write showScore function
     pass
 
 
-def trainScreen():  # todo write trainScreen function
-    pass
+def trainScreen(player, game_state, game_time, panes):  # todo write trainScreen function
+    
+    buttons = getButtons(game_state, panes[g.BOTTOM], panes[g.CENTER])
+    drawMainScreen(panes, player, game_time, buttons)
+    
+    mousex, mousey = 0, 0
 
+    while True:
+        
+        mouse_clicked = False
+        checkForQuit()
+        for event in pygame.event.get(): # event handling loop
+            if event.type == MOUSEMOTION:
+                mousex, mousey = event.pos
+            elif event.type == MOUSEBUTTONUP:
+                mouse_clicked = True
+        
+        for button in buttons:
+            over_button = button.checkHover((mousex,mousey))
+            
+            if over_button and mouse_clicked:  # Button has been clicked
+                if button.text == g.STR_BACK:
+                    return g.MAIN
+                elif button.text == g.STR_RETIRE:
+                    confirm = confirmRetire(panes)
+                    if confirm:
+                        return g.END
+                    else:
+                        drawMainScreen(panes, player, game_time, buttons)
+                if button.text in (g.STR_STRENGTH, g.STR_AGILITY, g.STR_ACCURACY):
+                    if player.canTrain(button.text):
+                        if confirmTrain(panes, button.text, player):
+                            player.trainSkill(button.text)
+                            game_time.incrementTime()
+                            return g.MAIN
+                    else:
+                        cannotTrainPrompt(panes, button.text, player)
+                        drawMainScreen(panes, player, game_time, buttons)
+                        
+                        
+                    
+                     
+                    
+        drawButtons(buttons)
+        g.FPS_CLOCK.tick(g.FPS)
+        pygame.display.update()           
+                    
 
 def battleScreen(player, game_state, game_time, panes):  # todo write battleScreen function
     buttons = getButtons(game_state, panes[g.BOTTOM], panes[g.CENTER])
@@ -190,7 +235,7 @@ def battleScreen(player, game_state, game_time, panes):  # todo write battleScre
             over_button = button.checkHover((mousex,mousey))
 
             if over_button and mouse_clicked:  # Button has been clicked
-                if button.text == 'Attack':
+                if button.text == g.STR_ATTACK:
                     player.attack(enemy)
                     if enemy.alive:  # Enemy is still alive after player attacks
                         enemy.attack(player)  # Enemy attacks player
@@ -210,7 +255,7 @@ def battleScreen(player, game_state, game_time, panes):  # todo write battleScre
                         return g.MAIN
 
 
-                elif button.text == 'Flee':
+                elif button.text == g.STR_FLEE:
                     message = "Are you sure you want to flee from the %s" % enemy.name
                     confirm = promptScreen(panes, message, True)
                     if confirm:
@@ -218,14 +263,12 @@ def battleScreen(player, game_state, game_time, panes):  # todo write battleScre
                         return g.MAIN
                     else:
                         drawBattleScreen(panes, player, buttons, enemy)
-                elif button.text == 'Retire':
-                    message = "Are you sure you want to end the game?"
-                    confirm = promptScreen(panes, message, True)
-                    if confirm:
+                elif button.text == g.STR_RETIRE:
+                    if confirmRetire(panes):
                         return g.END
                     else:
                         drawBattleScreen(panes, player, buttons, enemy)
-                elif button.text == 'Help':
+                elif button.text == g.STR_HELP:
                     # show help stuff
                     pass
 
@@ -254,21 +297,23 @@ def mainGameMenu(player, game_state, game_time, panes):  # todo finish mainScree
             over_button = button.checkHover((mousex,mousey))
 
             if over_button and mouse_clicked:  # Button has been clicked
-                if button.text == 'Hunt':
+                if button.text == g.STR_HUNT:
                     return g.BATTLE
-                elif button.text == 'Train':
+                elif button.text == g.STR_TRAIN:
                     return g.TRAIN
-                elif button.text == 'Sleep':
+                elif button.text == g.STR_SLEEP:
                     message = "Sleep until tomorrow morning to heal?"
                     confirm = promptScreen(panes, message, True)
                     if confirm:
                         player.sleep()
                         game_time.incrementDay()
                     return g.MAIN
-                elif button.text == 'Retire':
-                    # confirm retire
-                    pass
-                elif button.text == 'Help':
+                elif button.text == g.STR_RETIRE:
+                    if confirmRetire(panes):
+                        return g.END
+                    else:
+                        drawMainScreen(panes, player, game_time, buttons)
+                elif button.text == g.STR_HELP:
                     # show help stuff
                     pass
 
@@ -279,6 +324,25 @@ def mainGameMenu(player, game_state, game_time, panes):  # todo finish mainScree
         g.FPS_CLOCK.tick(g.FPS)
         pygame.display.update()
 
+def confirmRetire(panes):
+    #Return true or false
+    message = "Are you sure you want to end the game?"
+    return promptScreen(panes, message, True)
+    
+def confirmTrain(panes, skill, player):
+    #Returns true or false
+    message = "Are you sure you want to train %s for %d gold" % (skill, player.getSkillValue(skill))
+    return promptScreen(panes, message, True)
+
+def cannotTrainPrompt(panes, skill, player):
+    if player.getSkillValue(skill) == 5:
+        message = "Cannot train %s any further" % skill
+    else:
+        message = "Cannot train %s: not enough gold" % skill
+    
+    promptScreen(panes, message, False)
+    
+        
 
 def promptScreen(panes, message, askConfirm):
     # Draws various prompts depending on the state of the game
@@ -306,11 +370,11 @@ def promptScreen(panes, message, askConfirm):
             over_button = button.checkHover((mousex,mousey))
 
             if over_button and mouse_clicked:  # Button has been clicked
-                if button.text == 'Continue':
+                if button.text == g.STR_CONTINUE:
                     return True
-                elif button.text == 'Confirm':
+                elif button.text == g.STR_CONFIRM:
                     return True
-                elif button.text == 'Back':
+                elif button.text == g.STR_BACK:
                     return False
 
         drawButtons(buttons)
