@@ -140,7 +140,11 @@ class Enemy(Character):
         self.image_path = os.path.join('images', 'enemies', data['image'])
     
     def loadImage(self):
-        self.image = load(self.image_path).convert()
+        if os.path.exists(self.image_path):
+            self.image = load(self.image_path).convert()
+        else:
+            self.image = None
+            
         
     
 

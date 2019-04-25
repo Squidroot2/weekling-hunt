@@ -15,7 +15,8 @@ def drawBattleScreen(panes, player, buttons, enemy):
     createMainTemplate(panes)
     drawStatValues(player, panes[g.LEFT])
     drawStatValues(enemy, panes[g.RIGHT])
-    drawEnemy(panes[g.CENTER], enemy)
+    if enemy.image:
+        drawEnemy(panes[g.CENTER], enemy)
     drawButtons(buttons)
     #todo write function that shows damage amounts on the side panes
 
