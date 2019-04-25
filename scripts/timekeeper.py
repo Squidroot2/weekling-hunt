@@ -1,3 +1,5 @@
+# This module conatins the GameTime Class which is used to create an object that tracks the time of day and day of the week inside of the game
+
 class GameTime:
     day = 0
     time = 0
