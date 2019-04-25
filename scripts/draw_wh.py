@@ -185,3 +185,18 @@ def drawPrompt(center_pane, message):
 def drawEnemy(center_pane, enemy): #todo write draw enemy function
     pass
 
+
+def getPaneDimensions():
+    # Returns the rect dimensions left, center, right, and bottom pane
+    bottom_pane_height = g.WINDOW_HEIGHT / 4
+    side_pane_width = g.WINDOW_WIDTH / 4
+
+    bottom_pane = pygame.Rect(0, bottom_pane_height * 3, g.WINDOW_WIDTH, bottom_pane_height)
+
+    # The left and right panes are slightly offset to compensate for the thickness of the border
+    left_pane = pygame.Rect(0,0,side_pane_width,bottom_pane_height*3)
+    right_pane = pygame.Rect(g.WINDOW_WIDTH - side_pane_width, 0, side_pane_width, bottom_pane_height * 3)
+
+    center_pane = pygame.Rect(side_pane_width, 0, g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT * 3 / 4)
+
+    return left_pane, center_pane, right_pane, bottom_pane

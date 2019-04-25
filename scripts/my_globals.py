@@ -1,5 +1,6 @@
 import pygame
 
+
 def initializeGlobals():
     global FPS, WINDOW_WIDTH, WINDOW_HEIGHT, \
         WHITE, BLACK, SKY_BLUE, LIGHT_GRAY, \
@@ -26,7 +27,7 @@ def initializeGlobals():
     MAIN_FONT_SIZE = 30
     STAT_FONT_SIZE = 24
     S_BUTTON_FONT_SIZE = 18
-    MESSAGE_FONT_SIZE = 16
+    MESSAGE_FONT_SIZE = 20
 
     # SYNTACTIC SUGAR for PANES # Returns the rect dimensions left, center, right, and bottom pane
     LEFT = 0
@@ -61,7 +62,7 @@ def initializeGlobals():
 
     pygame.init()
     FPS_CLOCK = pygame.time.Clock()
-    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.locals.HWSURFACE)
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption('Weekling Hunt')
 
     TITLE_FONT = pygame.font.Font('freesansbold.ttf', TITLE_FONT_SIZE)
