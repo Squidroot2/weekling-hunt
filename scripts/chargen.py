@@ -2,8 +2,9 @@
 # This module handles the stats that both the character and enemies have and the functions that they have
 # Generates enemies by importing the csv from thew data folder
 
-import random, csv
+import random, csv, os
 import scripts.my_globals as g
+from pygame.image import load
 
 
 class Character:
@@ -136,7 +137,12 @@ class Enemy(Character):
         self.midday_occ = int(data['mid_occ'])
         self.evening_occ = int(data['eve_occ'])
         self.night_occ = int(data['night_occ'])
-
+        self.image_path = os.path.join('images', 'enemies', data['image'])
+    
+    def loadImage(self):
+        self.image = load(self.image_path).convert()
+        
+    
 
 def getEnemyDataFrom(csv_file_name):
     # pulls dictionaries from each line of the csv file and returns a list of enemy objects
@@ -181,6 +187,7 @@ def generateEnemy(game_time):
 
     for enemy in enemy_list:
         if enemy_chosen == enemy.name:
+            enemy.loadImage()
             return enemy
 
 

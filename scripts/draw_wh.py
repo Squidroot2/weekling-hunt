@@ -183,7 +183,8 @@ def drawPrompt(center_pane, message):
     g.screen.blit(message_text, message_text_rect)
 
 def drawEnemy(center_pane, enemy): #todo write draw enemy function
-    pass
+    enemy_image = pygame.transform.smoothscale(enemy.image, (center_pane.width, center_pane.height))
+    g.screen.blit(enemy_image, center_pane)
 
 
 def getPaneDimensions():
