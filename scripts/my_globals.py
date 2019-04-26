@@ -1,5 +1,6 @@
 import pygame
 
+# contains global variables that are used throughout the program
 
 def initializeGlobals():
     global FPS, WINDOW_WIDTH, WINDOW_HEIGHT, \
@@ -58,8 +59,6 @@ def initializeGlobals():
     STR_CONFIRM = "Confirm"
     STR_CONTINUE = "CONTINUE"
     
-    
-
     pygame.init()
     FPS_CLOCK = pygame.time.Clock()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
