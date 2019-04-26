@@ -1,5 +1,6 @@
 import pygame
 from scripts import my_globals as g
+from scripts.chargen import Player
 
 
 def drawMainScreen(panes, player, game_time, buttons):
@@ -46,11 +47,17 @@ def drawStatValues(player, pane):
     health_text = g.STAT_FONT.render("Health:", True, g.BLACK)
     health_text_rect = health_text.get_rect()
     health_text_rect.midleft = (pane.left + X_MARGIN, name_text_rect.bottom + g.MAIN_FONT_SIZE * 2)
+    
+    # Make Player's Health red when low
+    if isinstance(player, Player) and player.current_health <= 5:
+        health_color = g.RED
+    else:
+        health_color = g.BLACK
 
-    health_value = g.STAT_FONT.render(("%d/%d" %(player.current_health,player.max_health)), True, g.BLACK)
+    health_value = g.STAT_FONT.render(("%d/%d" %(player.current_health,player.max_health)), True, health_color)
     health_value_rect = health_value.get_rect()
     health_value_rect.midright = (pane.right-X_MARGIN, health_text_rect.centery)
-
+    
     strength_text = g.STAT_FONT.render("Strength:", True, g.BLACK)
     strength_text_rect = strength_text.get_rect()
     strength_text_rect.midleft = (pane.left + X_MARGIN, health_text_rect.bottom + g.STAT_FONT_SIZE * 1.5)
