@@ -12,14 +12,20 @@ def drawMainScreen(panes, player, game_time, buttons):
     drawCenterPane(game_state, game_time, panes[g.CENTER])
     drawButtons(buttons)
 
-def drawBattleScreen(panes, player, buttons, enemy):
+def drawBattleScreen(panes, player, buttons, enemy, player_damage, enemy_damage):
     createMainTemplate(panes)
     drawStatValues(player, panes[g.LEFT])
     drawStatValues(enemy, panes[g.RIGHT])
     if enemy.image:
         drawEnemy(panes[g.CENTER], enemy)
     drawButtons(buttons)
-    #todo write function that shows damage amounts on the side panes
+    
+    if not player_damage == None:
+        drawDamageDone(panes[g.RIGHT], player_damage)
+        
+    if not enemy_damage == None:
+        drawDamageDone(panes[g.LEFT], enemy_damage)
+    
 
 
 
@@ -161,7 +167,7 @@ def drawCenterPane(game_state, game_time, pane): #todo center images for trainin
 
     time_and_day = ("%s %s" %(game_time.days_of_week[game_time.day], game_time.times_of_day[game_time.time]))
 
-    time_text = g.STAT_FONT.render(time_and_day, True, g.BLACK)
+    time_text = g.MAIN_FONT.render(time_and_day, True, g.BLACK)
     time_text_rect = time_text.get_rect()
     time_text_rect.center = (pane.centerx, pane.bottom - 30)
 
@@ -232,8 +238,22 @@ def drawScoreScreen(player):
         
         g.screen.blit(death_text, death_text_rect)
         
+def drawDamageDone(pane, damage_done):
+
+    # player_damage is damge inflicted by the player on the enemy, enemy_damge is inverse
+    
+    if damage_done == 0:
+        message = "MISS"
+    else: 
+        message = "-%d" % damage_done
+            
+    message_text = g.TITLE_FONT.render(message, True, g.BLACK)
+    message_text_rect = message_text.get_rect()
+    message_text_rect.center = (pane.centerx, pane.height *5/6)
         
-        
+    g.screen.blit(message_text, message_text_rect)
+    
+   
         
         
         

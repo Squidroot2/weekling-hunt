@@ -3,7 +3,7 @@ from pygame.locals import *
 
 from scripts import my_globals as g
 from scripts.buttons import getButtons
-from scripts.draw_wh import drawMainScreen, drawButtons, drawBattleScreen, drawScoreScreen
+from scripts.draw_wh import drawMainScreen, drawButtons, drawBattleScreen, drawScoreScreen, drawDamageDone
 from scripts.prompts import confirmRetire, confirmTrain, cannotTrainPrompt, promptScreen
 from scripts.quit import checkForQuit
 from scripts.chargen import generateEnemy, Player
@@ -148,21 +148,23 @@ def battleScreen(player, game_state, game_time, panes):  # todo write battleScre
 
     mousex, mousey = 0, 0
 
-    drawBattleScreen(panes, player, buttons, enemy)
+    drawBattleScreen(panes, player, buttons, enemy, None, None)
     # First strike
     if enemy.agility > player.agility:
+        enemy_damage = enemy.attack(player)
+        drawBattleScreen(panes, player, buttons, enemy, None, enemy_damage)
+        
         message = "The %s strikes first due to its superior agility" %enemy.name
         promptScreen(panes, message, False)
-        enemy.attack(player)
-
+        
         # If first strike killed the player
         if not player.alive:
             message = "You have been killed by the %s" % enemy.name
             promptScreen(panes, message, False)
             return g.END
-
+        
         else:
-            drawBattleScreen(panes, player, buttons, enemy)
+            drawBattleScreen(panes, player, buttons, enemy, None, None)
 
     while True: # mainGameMenu loop
 
@@ -179,19 +181,25 @@ def battleScreen(player, game_state, game_time, panes):  # todo write battleScre
 
             if over_button and mouse_clicked:  # Button has been clicked
                 if button.text == g.STR_ATTACK:
-                    player.attack(enemy)
+                    player_damage = player.attack(enemy)
+                    
                     if enemy.alive:  # Enemy is still alive after player attacks
-                        enemy.attack(player)  # Enemy attacks player
+                        enemy_damage = enemy.attack(player)  # Enemy attacks player
+                        
                         if not player.alive: # If player is now dead, return end game state
+                            drawBattleScreen(panes, player, buttons, enemy, player_damage, enemy_damage)
                             message = "You have been killed by the %s" % enemy.name
                             promptScreen(panes, message, False)
                             return g.END
                         else:
-                            drawBattleScreen(panes, player, buttons, enemy)  # After a trade of blows, redraws battle panes to keep track of health.
+                            # After a trade of blows, redraws battle panes to keep track of health.
+                            drawBattleScreen(panes, player, buttons, enemy, player_damage, enemy_damage)  
+                            
+                            
                     else:  # If the enemy is dead, player collects gold adds kill to count. Then main game state is returned
                         player.collect_gold(enemy)
                         player.killedEnemy(enemy)
-                        drawBattleScreen(panes, player, buttons, enemy)
+                        drawBattleScreen(panes, player, buttons, enemy, player_damage, None)
                         message = "You have killed the %s and earned %d gold" % (enemy.name, enemy.gold)
                         promptScreen(panes, message, False)
                         game_time.incrementTime()
