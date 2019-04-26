@@ -1,12 +1,13 @@
-import pygame
+import pygame, os
 from pygame.locals import *
 
 from scripts import my_globals as g
-from scripts.buttons import getButtons
-from scripts.draw_wh import drawMainScreen, drawButtons, drawBattleScreen, drawScoreScreen, drawDamageDone
+from scripts.buttons import getButtons, getHelpButtons
+from scripts.draw_wh import drawMainScreen, drawButtons, drawBattleScreen, drawScoreScreen, drawDamageDone, drawHelpScreen
 from scripts.prompts import confirmRetire, confirmTrain, cannotTrainPrompt, promptScreen
 from scripts.quit import checkForQuit
-from scripts.chargen import generateEnemy, Player
+from scripts.chargen import generateEnemy, Player, getEnemyDataFrom
+
 
 
 def titleScreen(game_state):
@@ -228,6 +229,40 @@ def battleScreen(player, game_state, game_time, panes):  # todo write battleScre
         pygame.display.update()
 
 
+def helpScreen():
+    
+    csvfile = os.path.join('data', 'enemies.csv')
+    enemy_list = getEnemyDataFrom(csvfile)
+    buttons = getHelpButtons("BOTTOM", enemy_list)
+
+    
+    drawHelpScreen(buttons)
+    
+    mousex, mousey = 0, 0
+    
+    layer = 1
+    while layer > 0: # help screen loop
+
+        mouse_clicked = False  # every loop mouse clicked is set to false until mousebuttonup event occurs
+        checkForQuit()
+        for event in pygame.event.get(): # event handling loop
+            if event.type == MOUSEMOTION:
+                mousex, mousey = event.pos
+            elif event.type == MOUSEBUTTONUP:
+                mouse_clicked = True
+
+        for button in buttons:
+            over_button = button.checkHover((mousex,mousey))
+
+            if over_button and mouse_clicked:  # Button has been clicked
+                # Back goes up a layer
+                if button.text == g.STR_BACK:
+                    layer -= 1
+                    
+        drawButtons(buttons)
+        g.FPS_CLOCK.tick(g.FPS)
+        pygame.display.update()
+    
 def mainGameMenu(player, game_state, game_time, panes):
 
     buttons = getButtons(game_state, panes[g.BOTTOM], panes[g.CENTER])
@@ -266,8 +301,8 @@ def mainGameMenu(player, game_state, game_time, panes):
                     else:
                         drawMainScreen(panes, player, game_time, buttons)
                 elif button.text == g.STR_HELP:
-                    # show help stuff
-                    pass
+                    helpScreen()
+                    drawMainScreen(panes, player, game_time, buttons)
 
         drawButtons(buttons)
         g.FPS_CLOCK.tick(g.FPS)

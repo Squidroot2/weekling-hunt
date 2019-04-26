@@ -2,6 +2,8 @@ import pygame
 from scripts import my_globals as g
 
 
+
+
 class Button:
     def __init__(self, text, center, isBottom):
         # text is a string, center is a tuple, and isBottom is a boolean
@@ -42,6 +44,7 @@ class Button:
             self.bg_color = g.WHITE
             self.border_color = g.LIGHT_GRAY
             return False
+
 
 def getButtons(game_state, bottom_pane, center_pane):
 
@@ -94,3 +97,39 @@ def getPromptButtons(askConfirm, bottom_pane):
         buttons.append(button)
 
     return buttons
+
+def getHelpButtons(menu, enemy_list):
+    # Menu is a string that is either: 'MAIN, 'STATS', 'ACTIONS', ENEMIES', or 'BOTTOM'
+    if menu == 'MAIN':
+        choices = ['STATS', 'ACTIONS', 'ENEMIES']
+    elif menu == 'STATS':
+        choices = [g.STR_STRENGTH, g.STR_AGILITY, g.STR_ACCURACY]
+    elif menu == 'ACTIONS':
+        choices = [g.STR_HUNT, g.STR_TRAIN, g.STR_SLEEP]
+    elif menu == 'ENEMIES':
+        choices = []
+        for enemy in enemy_list:
+            choices.append(enemy.name)
+    else:
+        choices = []
+    
+    margin = g.WINDOW_WIDTH/20
+    divider = len(choices)+1
+    
+    buttons =[]
+    if not menu == 'ENEMIES':   
+        for i, choice in enumerate(choices, 1):
+            center_of_button =(g.WINDOW_WIDTH/ divider * i, g.WINDOW_HEIGHT/2)
+            button = Button(choice, center_of_button, True)
+            buttons.append(button)
+    
+    else:
+        pass
+    
+    # Back Button
+    back_button = Button(g.STR_BACK, (g.WINDOW_WIDTH/2, g.WINDOW_HEIGHT *9/10), False)
+    buttons.append(back_button)
+    
+    return buttons
+        
+    

@@ -25,9 +25,37 @@ def drawBattleScreen(panes, player, buttons, enemy, player_damage, enemy_damage)
         
     if not enemy_damage == None:
         drawDamageDone(panes[g.LEFT], enemy_damage)
+
+def drawHelpScreen(buttons):
+    g.screen.fill(g.WHITE)
+    drawButtons(buttons)
     
-
-
+    help_title = g.TITLE_FONT.render("How To Play", True, g.BLACK)
+    help_title_rect = help_title.get_rect()
+    help_title_rect.midtop = (g.WINDOW_WIDTH/2, g.WINDOW_HEIGHT/50)
+    
+    message = []
+    message.append("")
+    message.append("The object of the game is to have as much gold as possible by the end of the week.")
+    message.append("There are 7 days in the week(Sunday-Saturday) and 4 times of day(Morning, Mid-day, Evening, Night)")
+    message.append("Earn gold by defeating enemies in battle. The tougher the enemy, the more gold you earn")
+    message.append("Tougher enemies come out in the evening with the toughest enemies coming out late night")
+    message.append("You can spend your gold on training your skills to defeat more difficult enemies.")
+    message.append("Training costs more gold as you increase your stats.")
+    message.append("Sleep to fully heal your health. Sleeping always brings you to the next morning regardless of what time of day it is")
+    message.append("")
+    message.append("Strength is the maximum damage than you can do")
+    message.append("Agility determines first strike and dodge chance")
+    message.append("Accuracy affects chance to hit and chance to deal maximum damage")
+    
+    for i,line in enumerate(message):
+        line_text = g.MESSAGE_FONT.render(line, True, g.BLACK)
+        line_text_rect = line_text.get_rect()
+        line_text_rect.midtop = (g.WINDOW_WIDTH/2, help_title_rect.bottom + (g.MAIN_FONT_SIZE*1.5*i))
+        
+        g.screen.blit(line_text, line_text_rect)    
+    
+    g.screen.blit(help_title, help_title_rect)
 
 def createMainTemplate(panes):
     # Creates the template that it used for all game g.screens. Does not update the g.screen
