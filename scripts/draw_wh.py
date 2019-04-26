@@ -202,3 +202,31 @@ def getPaneDimensions():
     center_pane = pygame.Rect(side_pane_width, 0, g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT * 3 / 4)
 
     return left_pane, center_pane, right_pane, bottom_pane
+
+def drawScoreScreen(player):
+    if player.alive:
+        g.screen.fill(g.GOLD)
+        win_text = g.TITLE_FONT.render("You Survived the Week!", True, g.BLACK)
+        win_text_rect = win_text.get_rect()
+        win_text_rect.center = (g.WINDOW_WIDTH/2, g.WINDOW_HEIGHT/3)
+        
+        score_text = g.TITLE_FONT.render("You finished the week with %d gold" % player.gold, True, g.BLACK)
+        score_text_rect = score_text.get_rect()
+        score_text_rect.center = (g.WINDOW_WIDTH/2, g.WINDOW_HEIGHT*2/3)
+        
+        g.screen.blit(win_text, win_text_rect)
+        g.screen.blit(score_text, score_text_rect)      
+        
+    else:
+        g.screen.fill(g.RED)
+        death_text = g.TITLE_FONT.render("You have died and lost all of your gold", True, g.BLACK)
+        death_text_rect = death_text.get_rect()
+        death_text_rect.center = (g.WINDOW_WIDTH/2, g.WINDOW_HEIGHT/2)
+        
+        g.screen.blit(death_text, death_text_rect)
+        
+        
+        
+        
+        
+        

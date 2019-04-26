@@ -2,9 +2,9 @@ import pygame
 
 # contains global variables that are used throughout the program
 
-def initializeGlobals():
+def initializeGlobals(): # todo turn this into a class
     global FPS, WINDOW_WIDTH, WINDOW_HEIGHT, \
-        WHITE, BLACK, SKY_BLUE, LIGHT_GRAY, \
+        WHITE, BLACK, SKY_BLUE, LIGHT_GRAY, RED, GOLD, \
         TITLE_FONT_SIZE, MAIN_FONT_SIZE, STAT_FONT_SIZE, S_BUTTON_FONT_SIZE, MESSAGE_FONT_SIZE, \
         LEFT, CENTER, RIGHT, BOTTOM, \
         START, MAIN, BATTLE, TRAIN, SLEEP, END, \
@@ -22,6 +22,8 @@ def initializeGlobals():
     BLACK =        (  0,  0,    0)
     SKY_BLUE =     (  0, 213, 255)
     LIGHT_GRAY =   (200, 200, 200)
+    RED =          (255,   0,   0)
+    GOLD =         (255, 215, 100)
 
     # Font sizes
     TITLE_FONT_SIZE = 48

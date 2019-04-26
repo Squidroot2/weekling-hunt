@@ -3,7 +3,7 @@ from pygame.locals import *
 
 from scripts import my_globals as g
 from scripts.buttons import getButtons
-from scripts.draw_wh import drawMainScreen, drawButtons, drawBattleScreen
+from scripts.draw_wh import drawMainScreen, drawButtons, drawBattleScreen, drawScoreScreen
 from scripts.prompts import confirmRetire, confirmTrain, cannotTrainPrompt, promptScreen
 from scripts.quit import checkForQuit
 from scripts.chargen import generateEnemy, Player
@@ -54,7 +54,7 @@ def getPlayerName():
     continue_prompt_rect.center = (g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT * 2 / 3)
 
     name = ''
-    pygame.event.clear()  # Needed to make sure that any keys hit in the title g.screen don't end up in the name
+    pygame.event.clear()  # Needed to make sure that any keys hit in the title Screen don't end up in the name
     while True:
         g.screen.fill(g.SKY_BLUE)
         g.screen.blit(prompt, prompt_rect)
@@ -81,8 +81,17 @@ def getPlayerName():
         pygame.display.update()
 
 
-def showScore():  # todo write showScore function
-    pass
+def showScore(player):  # todo write showScore function
+    
+    drawScoreScreen(player)
+
+        
+    while True:
+        checkForQuit()
+        
+
+        pygame.display.update()
+        g.FPS_CLOCK.tick(g.FPS)
 
 
 def trainScreen(player, game_state, game_time, panes):  # todo write trainScreen function

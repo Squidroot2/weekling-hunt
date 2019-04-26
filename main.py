@@ -3,7 +3,8 @@
 # I originally created this game to help myself learn python and programming in general.
 # After discovering pygame, I wanted to recreate this game with 2D graphics
 
-from scripts.draw_wh import *
+import scripts.my_globals as g
+from scripts.draw_wh import getPaneDimensions
 from scripts.screens import titleScreen, showScore, trainScreen, battleScreen, mainGameMenu, getPlayerName
 from scripts.timekeeper import GameTime
 
@@ -33,7 +34,7 @@ def main():
         elif game_state == g.END:
             break
 
-    showScore()
+    showScore(player)
 
 
 if __name__ == '__main__':

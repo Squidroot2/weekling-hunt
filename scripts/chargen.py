@@ -88,7 +88,7 @@ class Player(Character):
 
     def killedEnemy(self, opponent):
         self.enemies_killed += 1
-        if opponent.rare:
+        if opponent.rare == True:
             self.rare_killed += 1
     
     def canTrain(self, skill):
@@ -130,7 +130,7 @@ class Enemy(Character):
         self.agility = int(data['agility'])
         self.accuracy = int(data['accuracy'])
         self.gold = int(data['gold'])
-        self.rare = bool(data['rare'])
+        self.rare = bool(int(data['rare']))
 
         # occurance rates
         self.morning_occ = int(data['morn_occ'])
