@@ -130,6 +130,8 @@ def trainScreen(player, game_state, game_time, panes):  # todo write trainScreen
                             player.trainSkill(button.text)
                             game_time.incrementTime()
                             return g.MAIN
+                        else:
+                            drawMainScreen(panes, player, game_time, buttons)
                     else:
                         cannotTrainPrompt(panes, button.text, player)
                         drawMainScreen(panes, player, game_time, buttons)
