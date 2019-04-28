@@ -48,15 +48,12 @@ class Button:
 
 def getButtons(game_state, bottom_pane, center_pane):
 
-    misc_button_width = center_pane.width / 8
-    misc_button_height = center_pane.height / 15
-
     # Draws the buttons to the screen and returns rectangle of the buttons
-    if game_state == g.MAIN:
+    if game_state == "MAIN":
         choices = [g.STR_HUNT, g.STR_TRAIN, g.STR_SLEEP]
-    elif game_state == g.BATTLE:
+    elif game_state == "BATTLE":
         choices = [g.STR_ATTACK, g.STR_FLEE]
-    elif game_state == g.TRAIN:
+    elif game_state == "TRAIN":
         choices = [g.STR_STRENGTH, g.STR_AGILITY, g.STR_ACCURACY, g.STR_BACK]
 
     pane_divider = len(choices)+1
@@ -98,7 +95,7 @@ def getPromptButtons(askConfirm, bottom_pane):
 
     return buttons
 
-def getHelpButtons(menu, enemy_list):
+def getHelpButtons(menu, enemy_list): #todo make a help menu
     # Menu is a string that is either: 'MAIN, 'STATS', 'ACTIONS', ENEMIES', or 'BOTTOM'
     if menu == 'MAIN':
         choices = ['STATS', 'ACTIONS', 'ENEMIES']

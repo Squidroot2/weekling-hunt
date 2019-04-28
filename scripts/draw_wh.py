@@ -7,7 +7,7 @@ from scripts.chargen import Player
 
 def drawMainScreen(panes, player, game_time, buttons):
     # draws the training or main game screen
-    game_state = g.MAIN
+    game_state = "MAIN"
 
     createMainTemplate(panes)
     drawStatValues(player, panes['left'])
@@ -183,7 +183,7 @@ def drawInfoPane(player, pane):
 
 def drawCenterPane(game_state, game_time, pane): #todo center images for training
 
-    if game_state == g.MAIN or game_state == g.TRAIN:
+    if game_state == "MAIN" or game_state == "TRAIN":
         if game_time.time == 0:  # time is morning
             image_path = os.path.join('images', 'morning_bg.png')
         elif game_time.time == 1:  # time is afternoon
@@ -257,7 +257,7 @@ def drawScoreScreen(player):
         
         score_text = g.TITLE_FONT.render("You finished the week with %d gold" % player.gold, True, g.BLACK)
         score_text_rect = score_text.get_rect()
-        score_text_rect.center = (g.WINDOW_WIDTH/2, g.WINDOW_HEIGHT*2/3)
+        score_text_rect.center = (g.WINDOW_WIDTH/2, g.WINDOW_HEIGHT/2)
         
         g.screen.blit(win_text, win_text_rect)
         g.screen.blit(score_text, score_text_rect)      
@@ -269,7 +269,13 @@ def drawScoreScreen(player):
         death_text_rect.center = (g.WINDOW_WIDTH/2, g.WINDOW_HEIGHT/2)
         
         g.screen.blit(death_text, death_text_rect)
-        
+
+    continue_prompt = g.MAIN_FONT.render("Press Enter to Restart Game", True, g.BLACK)
+    continue_prompt_rect = continue_prompt.get_rect()
+    continue_prompt_rect.center = (g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT *  5/6)
+
+    g.screen.blit(continue_prompt, continue_prompt_rect)
+
 def drawDamageDone(pane, damage_done):
 
     # player_damage is damge inflicted by the player on the enemy, enemy_damge is inverse

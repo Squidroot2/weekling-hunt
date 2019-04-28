@@ -6,7 +6,6 @@ def initializeGlobals(): # todo turn this into a class
     global FPS, WINDOW_WIDTH, WINDOW_HEIGHT, \
         WHITE, BLACK, SKY_BLUE, LIGHT_GRAY, RED, GOLD, \
         TITLE_FONT_SIZE, MAIN_FONT_SIZE, STAT_FONT_SIZE, S_BUTTON_FONT_SIZE, MESSAGE_FONT_SIZE, \
-        START, MAIN, BATTLE, TRAIN, SLEEP, END, \
         FPS_CLOCK, MAIN_FONT, TITLE_FONT, STAT_FONT, S_BUTTON_FONT, MESSAGE_FONT, screen, \
         STR_HUNT, STR_TRAIN, STR_SLEEP, STR_HELP, STR_RETIRE, STR_ATTACK, STR_FLEE, \
         STR_STRENGTH, STR_AGILITY, STR_ACCURACY, STR_BACK, STR_CONFIRM, STR_CONTINUE 
@@ -30,14 +29,6 @@ def initializeGlobals(): # todo turn this into a class
     STAT_FONT_SIZE = 24
     S_BUTTON_FONT_SIZE = 18
     MESSAGE_FONT_SIZE = 20
-
-    # Gamestates
-    START = 0
-    MAIN = 1
-    BATTLE = 2
-    TRAIN = 3
-    SLEEP = 4
-    END = 5
     
     #Button texts
     STR_HUNT = "Hunt"

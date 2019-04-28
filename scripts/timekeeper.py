@@ -33,4 +33,8 @@ class GameTime:
         day_and_time = "%s %s" %(self.getDay(), self.getTime())
         return day_and_time
 
+    def reset(self):
+        self.day = 0
+        self.time = 0
+
 

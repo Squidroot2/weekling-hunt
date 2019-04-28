@@ -77,7 +77,7 @@ class Player(Character):
         self.total_gold = 0
         self.enemies_killed = 0
         self.rare_killed = 0
-        self.message = "You begin your hunt"
+
 
     def sleep(self):
         self.current_health = self.max_health
@@ -118,7 +118,17 @@ class Player(Character):
             return self.agility
         if skill == g.STR_ACCURACY:
             return self.accuracy
-        
+
+    def reset(self):
+        self.max_health = 10
+        self.current_health = self.max_health
+        self.strength = 1
+        self.agility = 1
+        self.accuracy = 1
+        self.gold = 0
+        self.total_gold = 0
+        self.enemies_killed = 0
+        self.rare_killed = 0
 
 class Enemy(Character):
     def __init__(self, data):

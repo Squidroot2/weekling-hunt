@@ -3,14 +3,14 @@ from pygame.locals import *
 
 from scripts import my_globals as g
 from scripts.buttons import getButtons, getHelpButtons
-from scripts.draw_wh import drawMainScreen, drawButtons, drawBattleScreen, drawScoreScreen, drawDamageDone, drawHelpScreen
+from scripts.draw_wh import drawMainScreen, drawButtons, drawBattleScreen, drawScoreScreen, drawHelpScreen
 from scripts.prompts import confirmRetire, confirmTrain, cannotTrainPrompt, promptScreen
 from scripts.quit import checkForQuit
 from scripts.chargen import generateEnemy, Player, getEnemyDataFrom
 
 
 
-def titleScreen(game_state):
+def titleScreen():
     g.screen.fill(g.SKY_BLUE)
 
     title = g.TITLE_FONT.render("Weekling Hunt", True, g.BLACK)
@@ -34,12 +34,13 @@ def titleScreen(game_state):
     #g.screen.blit(subtitle2, subtitle2_rect)
     g.screen.blit(continue_prompt, continue_prompt_rect)
 
-    while game_state == g.START:
+    title = True
+
+    while title:
         checkForQuit()
         for event in pygame.event.get(KEYUP):
             if event.key == K_RETURN:
-                game_state += 1
-                return game_state
+                title = False
 
         pygame.display.update()
         g.FPS_CLOCK.tick(g.FPS)
@@ -83,13 +84,17 @@ def getPlayerName():
 
 
 def showScore(player):  # todo write showScore function
-    
+
+    end = True
+
     drawScoreScreen(player)
 
         
-    while True:
+    while end:
         checkForQuit()
-        
+        for event in pygame.event.get(KEYUP):
+            if event.key == K_RETURN:
+                end = False
 
         pygame.display.update()
         g.FPS_CLOCK.tick(g.FPS)
@@ -117,11 +122,11 @@ def trainScreen(player, game_state, game_time, panes):
 
             if over_button and mouse_clicked:  # Button has been clicked
                 if button.text == g.STR_BACK:
-                    return g.MAIN
+                    return "MAIN"
                 elif button.text == g.STR_RETIRE:
                     confirm = confirmRetire(panes)
                     if confirm:
-                        return g.END
+                        return "END"
                     else:
                         drawMainScreen(panes, player, game_time, buttons)
                 if button.text in (g.STR_STRENGTH, g.STR_AGILITY, g.STR_ACCURACY):
@@ -129,7 +134,7 @@ def trainScreen(player, game_state, game_time, panes):
                         if confirmTrain(panes, button.text, player):
                             player.trainSkill(button.text)
                             game_time.incrementTime()
-                            return g.MAIN
+                            return "MAIN"
                         else:
                             drawMainScreen(panes, player, game_time, buttons)
                     else:
@@ -164,7 +169,7 @@ def battleScreen(player, game_state, game_time, panes):  # todo write battleScre
         if not player.alive:
             message = "You have been killed by the %s" % enemy.name
             promptScreen(panes, message, False)
-            return g.END
+            return "END"
         
         else:
             drawBattleScreen(panes, player, buttons, enemy, None, None)
@@ -193,7 +198,7 @@ def battleScreen(player, game_state, game_time, panes):  # todo write battleScre
                             drawBattleScreen(panes, player, buttons, enemy, player_damage, enemy_damage)
                             message = "You have been killed by the %s" % enemy.name
                             promptScreen(panes, message, False)
-                            return g.END
+                            return "END"
                         else:
                             # After a trade of blows, redraws battle panes to keep track of health.
                             drawBattleScreen(panes, player, buttons, enemy, player_damage, enemy_damage)  
@@ -206,7 +211,7 @@ def battleScreen(player, game_state, game_time, panes):  # todo write battleScre
                         message = "You have killed the %s and earned %d gold" % (enemy.name, enemy.gold)
                         promptScreen(panes, message, False)
                         game_time.incrementTime()
-                        return g.MAIN
+                        return "MAIN"
 
 
                 elif button.text == g.STR_FLEE:
@@ -214,12 +219,12 @@ def battleScreen(player, game_state, game_time, panes):  # todo write battleScre
                     confirm = promptScreen(panes, message, True)
                     if confirm:
                         game_time.incrementTime()
-                        return g.MAIN
+                        return "MAIN"
                     else:
                         drawBattleScreen(panes, player, buttons, enemy)
                 elif button.text == g.STR_RETIRE:
                     if confirmRetire(panes):
-                        return g.END
+                        return "END"
                     else:
                         drawBattleScreen(panes, player, buttons, enemy)
                 elif button.text == g.STR_HELP:
@@ -287,19 +292,19 @@ def mainGameMenu(player, game_state, game_time, panes):
 
             if over_button and mouse_clicked:  # Button has been clicked
                 if button.text == g.STR_HUNT:
-                    return g.BATTLE
+                    return "BATTLE"
                 elif button.text == g.STR_TRAIN:
-                    return g.TRAIN
+                    return "TRAIN"
                 elif button.text == g.STR_SLEEP:
                     message = "Sleep until tomorrow morning to heal?"
                     confirm = promptScreen(panes, message, True)
                     if confirm:
                         player.sleep()
                         game_time.incrementDay()
-                    return g.MAIN
+                    return "MAIN"
                 elif button.text == g.STR_RETIRE:
                     if confirmRetire(panes):
-                        return g.END
+                        return "END"
                     else:
                         drawMainScreen(panes, player, game_time, buttons)
                 elif button.text == g.STR_HELP:

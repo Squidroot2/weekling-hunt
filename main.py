@@ -14,27 +14,30 @@ def main():
 
     g.initializeGlobals()
 
-    game_state = g.START
-    game_state = titleScreen(game_state)
-    game_time = GameTime()
-
-    player = getPlayerName() # Generates the global variable player
+    titleScreen()
     panes = getPaneDimensions()
-    while True:  # main game loop
-        if game_time.timeOver():
-            game_state = g.END
-            break
-            
-        if game_state == g.MAIN:
-            game_state = mainGameMenu(player, game_state, game_time, panes)
-        elif game_state == g.BATTLE:
-            game_state = battleScreen(player, game_state, game_time, panes)
-        elif game_state == g.TRAIN:
-            game_state = trainScreen(player, game_state, game_time, panes)
-        elif game_state == g.END:
-            break
+    player = getPlayerName()  # Generates the player object
+    game_time = GameTime()
+    while True:
+        game_state = "MAIN"
+        while True:  # main game loop
+            if game_time.timeOver() or game_state == "END":
+                break
+            elif game_state == "MAIN":
+                game_state = mainGameMenu(player, game_state, game_time, panes)
+            elif game_state == "BATTLE":
+                game_state = battleScreen(player, game_state, game_time, panes)
+            elif game_state == "TRAIN":
+                game_state = trainScreen(player, game_state, game_time, panes)
 
-    showScore(player)
+        showScore(player)
+        resetGame(player, game_time)
+
+def resetGame(player, game_time):
+
+    player.reset()
+    game_time.reset()
+
 
 
 if __name__ == '__main__':
