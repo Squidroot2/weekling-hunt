@@ -144,6 +144,9 @@ class Enemy(Character):
             self.image = load(self.image_path).convert()
         else:
             self.image = None
+
+    def __str__(self):
+        return self.name
             
         
     
