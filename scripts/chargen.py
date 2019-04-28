@@ -147,8 +147,6 @@ class Enemy(Character):
 
     def __str__(self):
         return self.name
-            
-        
     
 
 def getEnemyDataFrom(csv_file_name):
@@ -185,8 +183,8 @@ def getWeightedEnemyList(enemy_list, game_time):
 
 def generateEnemy(game_time):
     # calls functions to generate a weighted list of enemies and return a random choice from that list
-
-    enemy_list = getEnemyDataFrom('data/enemies.csv')
+    enemies_csv = os.path.join('data', 'enemies.csv')
+    enemy_list = getEnemyDataFrom(enemies_csv)
     weighted_list = getWeightedEnemyList(enemy_list, game_time)
 
     # enemy_chosen is simply a string so enemy_list needs to searched for a matching name and that enemy object is returned

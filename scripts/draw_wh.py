@@ -1,9 +1,12 @@
 import pygame
+import os.path
 from scripts import my_globals as g
 from scripts.chargen import Player
 
 
+
 def drawMainScreen(panes, player, game_time, buttons):
+    # draws the training or main game screen
     game_state = g.MAIN
 
     createMainTemplate(panes)
@@ -180,16 +183,17 @@ def drawInfoPane(player, pane):
 
 def drawCenterPane(game_state, game_time, pane): #todo center images for training
 
-    if game_state == g.MAIN:
+    if game_state == g.MAIN or game_state == g.TRAIN:
         if game_time.time == 0:  # time is morning
-            center_image = pygame.image.load('./images/morning_bg.png').convert()
+            image_path = os.path.join('images', 'morning_bg.png')
         elif game_time.time == 1:  # time is afternoon
-            center_image = pygame.image.load('./images/midday_bg.png').convert()
+            image_path = os.path.join('images', 'midday_bg.png')
         elif game_time.time == 2:  # time is evening
-            center_image = pygame.image.load('./images/evening_bg.png').convert()
+            image_path = os.path.join('images', 'evening_bg.png')
         elif game_time.time == 3:  # time is night
-            center_image = pygame.image.load('./images/night_bg.png').convert()
+            image_path = os.path.join('images', 'night_bg.png')
 
+    center_image = pygame.image.load(image_path).convert()
     center_image = pygame.transform.smoothscale(center_image, (pane.width, pane.height))
     g.screen.blit(center_image, pane)
 
