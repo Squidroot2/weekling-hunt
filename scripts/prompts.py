@@ -32,9 +32,9 @@ def promptScreen(panes, message, askConfirm):
     # Draws various prompts depending on the state of the game
     # message is what will be displayed. askConfirm is whether it is a yes/no prompt or a continue prompt
 
-    drawBottomPane(panes[g.BOTTOM])
-    drawPrompt(panes[g.CENTER], message)
-    buttons = getPromptButtons(askConfirm, panes[g.BOTTOM])
+    drawBottomPane(panes['bottom'])
+    drawPrompt(panes['center'], message)
+    buttons = getPromptButtons(askConfirm, panes['bottom'])
     drawButtons(buttons)
 
 

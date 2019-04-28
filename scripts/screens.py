@@ -95,9 +95,9 @@ def showScore(player):  # todo write showScore function
         g.FPS_CLOCK.tick(g.FPS)
 
 
-def trainScreen(player, game_state, game_time, panes):  # todo write trainScreen function
+def trainScreen(player, game_state, game_time, panes):
 
-    buttons = getButtons(game_state, panes[g.BOTTOM], panes[g.CENTER])
+    buttons = getButtons(game_state, panes['bottom'], panes['center'])
     drawMainScreen(panes, player, game_time, buttons)
 
     mousex, mousey = 0, 0
@@ -146,7 +146,7 @@ def trainScreen(player, game_state, game_time, panes):  # todo write trainScreen
 
 
 def battleScreen(player, game_state, game_time, panes):  # todo write battleScreen function
-    buttons = getButtons(game_state, panes[g.BOTTOM], panes[g.CENTER])
+    buttons = getButtons(game_state, panes['bottom'], panes['center'])
     enemy = generateEnemy(game_time)
 
     mousex, mousey = 0, 0
@@ -267,7 +267,7 @@ def helpScreen():
     
 def mainGameMenu(player, game_state, game_time, panes):
 
-    buttons = getButtons(game_state, panes[g.BOTTOM], panes[g.CENTER])
+    buttons = getButtons(game_state, panes['bottom'], panes['center'])
     drawMainScreen(panes, player, game_time, buttons) # calls a bunch of draw functions from draw_wh
 
     mousex, mousey = 0, 0

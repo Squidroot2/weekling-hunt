@@ -10,24 +10,24 @@ def drawMainScreen(panes, player, game_time, buttons):
     game_state = g.MAIN
 
     createMainTemplate(panes)
-    drawStatValues(player, panes[g.LEFT])
-    drawInfoPane(player, panes[g.RIGHT])
-    drawCenterPane(game_state, game_time, panes[g.CENTER])
+    drawStatValues(player, panes['left'])
+    drawInfoPane(player, panes['right'])
+    drawCenterPane(game_state, game_time, panes['center'])
     drawButtons(buttons)
 
 def drawBattleScreen(panes, player, buttons, enemy, player_damage, enemy_damage):
     createMainTemplate(panes)
-    drawStatValues(player, panes[g.LEFT])
-    drawStatValues(enemy, panes[g.RIGHT])
+    drawStatValues(player, panes['left'])
+    drawStatValues(enemy, panes['right'])
     if enemy.image:
-        drawEnemy(panes[g.CENTER], enemy)
+        drawEnemy(panes['center'], enemy)
     drawButtons(buttons)
     
     if not player_damage == None:
-        drawDamageDone(panes[g.RIGHT], player_damage)
+        drawDamageDone(panes['right'], player_damage)
         
     if not enemy_damage == None:
-        drawDamageDone(panes[g.LEFT], enemy_damage)
+        drawDamageDone(panes['left'], enemy_damage)
 
 def drawHelpScreen(buttons):
     g.screen.fill(g.WHITE)
@@ -65,10 +65,10 @@ def createMainTemplate(panes):
     g.screen.fill(g.WHITE)
 
     # Bottom Pane
-    pygame.draw.rect(g.screen, g.BLACK, (panes[g.BOTTOM]), 0)
-    pygame.draw.rect(g.screen, g.BLACK, (panes[g.LEFT]), 2)
-    pygame.draw.rect(g.screen, g.BLACK, (panes[g.RIGHT]), 2)
-    pygame.draw.rect(g.screen, g.BLACK, (panes[g.CENTER]), 2)
+    pygame.draw.rect(g.screen, g.BLACK, (panes['bottom']), 0)
+    pygame.draw.rect(g.screen, g.BLACK, (panes['left']), 2)
+    pygame.draw.rect(g.screen, g.BLACK, (panes['right']), 2)
+    pygame.draw.rect(g.screen, g.BLACK, (panes['center']), 2)
 
 
 def drawStatValues(player, pane):
@@ -246,7 +246,7 @@ def getPaneDimensions():
 
     center_pane = pygame.Rect(side_pane_width, 0, g.WINDOW_WIDTH / 2, g.WINDOW_HEIGHT * 3 / 4)
 
-    return left_pane, center_pane, right_pane, bottom_pane
+    return {'left': left_pane, 'center': center_pane, 'right': right_pane, 'bottom': bottom_pane}
 
 def drawScoreScreen(player):
     if player.alive:
