@@ -1,4 +1,4 @@
-# This module conatins the GameTime Class which is used to create an object that tracks the time of day and day of the week inside of the game
+# This module contains the GameTime Class which is used to create an object that tracks the time of day and day of the week inside of the game
 
 class GameTime:
     day = 0
@@ -21,3 +21,16 @@ class GameTime:
             return True
         else:
             return False
+
+    def getTime(self):
+        return self.times_of_day[self.time]
+
+    def getDay(self):
+        return self.days_of_week[self.day]
+
+    def __str__(self):
+
+        day_and_time = "%s %s" %(self.getDay(), self.getTime())
+        return day_and_time
+
+

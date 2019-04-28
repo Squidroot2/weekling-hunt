@@ -193,7 +193,7 @@ def drawCenterPane(game_state, game_time, pane): #todo center images for trainin
     center_image = pygame.transform.smoothscale(center_image, (pane.width, pane.height))
     g.screen.blit(center_image, pane)
 
-    time_and_day = ("%s %s" %(game_time.days_of_week[game_time.day], game_time.times_of_day[game_time.time]))
+    time_and_day = (str(game_time))
 
     time_text = g.MAIN_FONT.render(time_and_day, True, g.BLACK)
     time_text_rect = time_text.get_rect()
