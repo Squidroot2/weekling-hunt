@@ -2,8 +2,6 @@ import pygame
 from scripts import my_globals as g
 
 
-
-
 class Button:
     def __init__(self, text, center, isBottom):
         # text is a string, center is a tuple, and isBottom is a boolean
@@ -96,6 +94,7 @@ def getPromptButtons(askConfirm, bottom_pane):
     return buttons
 
 def getHelpButtons(menu, enemy_list): #todo make a help menu
+
     # Menu is a string that is either: 'MAIN, 'STATS', 'ACTIONS', ENEMIES', or 'BOTTOM'
     if menu == 'MAIN':
         choices = ['STATS', 'ACTIONS', 'ENEMIES']
@@ -110,7 +109,6 @@ def getHelpButtons(menu, enemy_list): #todo make a help menu
     else:
         choices = []
     
-    margin = g.WINDOW_WIDTH/20
     divider = len(choices)+1
     
     buttons =[]
