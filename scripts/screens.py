@@ -7,6 +7,7 @@ from scripts.draw_wh import drawMainScreen, drawButtons, drawBattleScreen, drawS
 from scripts.prompts import confirmRetire, confirmTrain, cannotTrainPrompt, promptScreen
 from scripts.quit import checkForQuit
 from scripts.chargen import generateEnemy, Player, getEnemyDataFrom
+from scripts.scoreboard import Scoreboard
 
 
 
@@ -85,16 +86,19 @@ def getPlayerName():
 
 def showScore(player):  # todo write showScore function
 
-    end = True
+    screen = 0
 
     drawScoreScreen(player)
-
+    scoreboard = Scoreboard()
         
-    while end:
+    while screen < 2:
         checkForQuit()
         for event in pygame.event.get(KEYUP):
             if event.key == K_RETURN:
-                end = False
+                g.screen.fill(g.WHITE)
+                scoreboard.draw()
+                screen += 1
+
 
         pygame.display.update()
         g.FPS_CLOCK.tick(g.FPS)

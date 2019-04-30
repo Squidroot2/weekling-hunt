@@ -127,10 +127,6 @@ def drawStatValues(player, pane):
     gold_value_rect = gold_value.get_rect()
     gold_value_rect.midright = (pane.right-X_MARGIN, gold_text_rect.centery)
 
-   # message_text = g.MESSAGE_FONT.render(player.message, True, g.BLACK)
-   # message_text_rect = message_text.get_rect()
-   # message_text_rect.midbottom = (pane.centerx, pane.bottom-g.MESSAGE_FONT_SIZE)
-
     g.screen.blit(name_text, name_text_rect)
     g.screen.blit(health_text, health_text_rect)
     g.screen.blit(strength_text, strength_text_rect)
@@ -142,7 +138,6 @@ def drawStatValues(player, pane):
     g.screen.blit(agility_value, agility_value_rect)
     g.screen.blit(accuracy_value, accuracy_value_rect)
     g.screen.blit(gold_value, gold_value_rect)
-    #g.screen.blit(message_text, message_text_rect)
 
 
 def drawInfoPane(player, pane):
