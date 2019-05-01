@@ -7,7 +7,6 @@ from scripts.draw_wh import drawMainScreen, drawButtons, drawBattleScreen, drawS
 from scripts.prompts import confirmRetire, confirmTrain, cannotTrainPrompt, promptScreen
 from scripts.quit import checkForQuit
 from scripts.chargen import generateEnemy, Player, getEnemyDataFrom
-from scripts.scoreboard import Scoreboard
 
 
 
