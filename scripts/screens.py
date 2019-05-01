@@ -84,12 +84,13 @@ def getPlayerName():
         pygame.display.update()
 
 
-def showScore(player):  # todo write showScore function
+def showScore(player,scoreboard):
 
     screen = 0
 
     drawScoreScreen(player)
-    scoreboard = Scoreboard()
+    if player.alive:
+        scoreboard.addScore((player.name, player.gold))
         
     while screen < 2:
         checkForQuit()

@@ -7,7 +7,7 @@ import scripts.my_globals as g
 from scripts.draw_wh import getPaneDimensions
 from scripts.screens import titleScreen, showScore, trainScreen, battleScreen, mainGameMenu, getPlayerName
 from scripts.timekeeper import GameTime
-
+from scripts.scoreboard import Scoreboard
 
 
 def main():
@@ -18,6 +18,7 @@ def main():
     panes = getPaneDimensions()
     player = getPlayerName()  # Generates the player object
     game_time = GameTime()
+    scoreboard = Scoreboard()
     while True:
         game_state = "MAIN"
         while True:  # main game loop
@@ -30,7 +31,7 @@ def main():
             elif game_state == "TRAIN":
                 game_state = trainScreen(player, game_state, game_time, panes)
 
-        showScore(player)
+        showScore(player, scoreboard)
         resetGame(player, game_time)
 
 def resetGame(player, game_time):
