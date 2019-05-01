@@ -69,7 +69,7 @@ def getPlayerName():
                     return Player(name)
                 elif event.key == K_BACKSPACE:
                     name = name[:-1]
-                else:
+                elif len(name) < 16:
                     name += event.unicode
 
         input = g.MAIN_FONT.render(name, True, g.BLACK)
