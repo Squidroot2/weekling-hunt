@@ -97,6 +97,7 @@ def showScore(player,scoreboard):
             if event.key == K_RETURN:
                 g.screen.fill(g.WHITE)
                 scoreboard.draw()
+                scoreboard.save()
                 screen += 1
 
 
