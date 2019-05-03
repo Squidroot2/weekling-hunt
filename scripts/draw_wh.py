@@ -15,7 +15,7 @@ def drawMainScreen(panes, player, game_time, buttons):
     drawCenterPane(game_state, game_time, panes['center'])
     drawButtons(buttons)
 
-def drawBattleScreen(panes, player, buttons, enemy, player_damage, enemy_damage):
+def drawBattleScreen(panes, player, buttons, enemy, player_damage=None, enemy_damage=None):
     createMainTemplate(panes)
     drawStatValues(player, panes['left'])
     drawStatValues(enemy, panes['right'])

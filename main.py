@@ -38,11 +38,11 @@ def main():
         showScore(player, scoreboard)
         resetGame(player, game_time)
 
+
 def resetGame(player, game_time):
 
     player.reset()
     game_time.reset()
-
 
 
 if __name__ == '__main__':
