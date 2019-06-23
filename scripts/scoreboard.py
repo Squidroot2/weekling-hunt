@@ -1,12 +1,16 @@
 from scripts import my_globals as g
-
+import os
+import pickle
 
 class Scoreboard:
     num_rows = 10
+    file_location = os.path.join('data', 'scoreboard.sb')
 
-    def __init__(self):
+    def __init__(self, name="High Scores"):
         self.scores =[('',0)]*self.num_rows
         self.newest_score = None
+        self.name = name
+
 
     def addScore(self, new_score):
         place = None
@@ -25,7 +29,8 @@ class Scoreboard:
 
     def draw(self):
 
-        title_text = g.MAIN_FONT.render("High Scores", True, g.BLACK)
+        # First prints the name of the
+        title_text = g.MAIN_FONT.render(self.name, True, g.BLACK)
         title_text_rect = title_text.get_rect()
         title_text_rect.center = (g.WINDOW_WIDTH/2, g.MAIN_FONT.get_linesize())
 
@@ -55,7 +60,19 @@ class Scoreboard:
             g.screen.blit(name_text, name_text_rect)
             g.screen.blit(score_text, score_text_rect)
 
+    def save(self):
+        pickle_file = open(self.file_location, "wb")
+        pickle.dump(self, pickle_file)
+        pickle_file.close()
 
+    @classmethod
+    def load(cls):
+        pickle_file = open(cls.file_location, "rb")
+        return pickle.load(pickle_file)
+
+    @classmethod
+    def checkExist(cls):
+        return os.path.isfile(cls.file_location)
 
 
 

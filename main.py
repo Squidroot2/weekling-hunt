@@ -18,7 +18,11 @@ def main():
     panes = getPaneDimensions()
     player = getPlayerName()  # Generates the player object
     game_time = GameTime()
-    scoreboard = Scoreboard()
+    if Scoreboard.checkExist():
+        scoreboard = Scoreboard.load()
+    else:
+        scoreboard = Scoreboard()
+
     while True:
         game_state = "MAIN"
         while True:  # main game loop
@@ -34,11 +38,11 @@ def main():
         showScore(player, scoreboard)
         resetGame(player, game_time)
 
+
 def resetGame(player, game_time):
 
     player.reset()
     game_time.reset()
-
 
 
 if __name__ == '__main__':
